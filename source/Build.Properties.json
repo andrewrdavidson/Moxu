@@ -1,0 +1,73 @@
+{
+    "PreRequisites": {
+        "PSQualityCheck": "1.1.0",
+        "Pester": "5.1",
+        "PSScriptAnalyzer": "1.19.0"
+    },
+    "Modules": {
+        "Location": {
+            "PSMoxu": ".\\PSMoxu",
+            "PSMoxu.Database": ".\\PSMoxu.Database",
+            "PSMoxu.Installation": ".\\PSMoxu.Installation",
+            "PSMoxu.Logging": ".\\PSMoxu.Logging",
+            "PSMoxu.Media": ".\\PSMoxu.Media"
+        }
+    },
+    "ModuleData": {
+        "Author": "Andrew Davidson",
+        "Company": "Andrew Davidson",
+        "Copyright": "(c) Andrew Davidson. All rights reserved.",
+        "Description": {
+            "PSMoxu": "This module interfaces to a set of Pester tests that enable the enforcement of quality controls rules on PowerShell scripts and modules.",
+            "PSMoxu.Database": "This sub-module contains database specific functions.",
+            "PSMoxu.Installation": "This sub-module contains installation specific functions.",
+            "PSMoxu.Logging": "This sub-module contains logging specific functions.",
+            "PSMoxu.Media": "This sub-module contains media specific functions."
+        },
+        "FileList": {
+            "PSMoxu": null,
+            "PSMoxu.Database": [
+                "file.psd1"
+            ],
+            "PSMoxu.Installation": null,
+            "PSMoxu.Logging": null,
+            "PSMoxu.Media": null
+        },
+        "GUID": {
+            "PSMoxu": "67c0b16f-fca5-4561-aba8-c2e61271b845",
+            "PSMoxu.Database": "0af85c37-55aa-4277-be86-ba34278284a9",
+            "PSMoxu.Installation": "e1e1e97a-a8c1-4074-8726-45bf81d231ba",
+            "PSMoxu.Logging": "b7bebfb9-6f17-47b8-bf25-b86898e10ac8",
+            "PSMoxu.Media": "f8364e59-67a7-4e43-9b6f-80c352815b7e"
+        },
+        "HelpInfoURI": "https://github.com/andrewrdavidson/PSQualityCheck/wiki",
+        "LicenseUri": "https://github.com/andrewrdavidson/PSQualityCheck/blob/main/LICENSE",
+        "ModuleVersion": {
+            "PSMoxu": "0.1",
+            "PSMoxu.Database": "0.1",
+            "PSMoxu.Installation": "0.1",
+            "PSMoxu.Logging": "0.1",
+            "PSMoxu.Media": "0.1"
+        },
+        "NestedModules": {
+            "PSMoxu": [
+                "PS.Moxu.Database.psd1",
+                "PS.Moxu.Installation.psd1",
+                "PS.Moxu.Logging.psd1",
+                "PS.Moxu.Media.psd1"
+            ],
+            "PSMoxu.Database": null,
+            "PSMoxu.Installation": null,
+            "PSMoxu.Logging": null,
+            "PSMoxu.Media": null
+        },
+        "PowerShellVersion": "6.0",
+        "ProjectUri": "https://github.com/andrewrdavidson/PSMoxu",
+        "Tags": [
+            "powershell",
+            "powershell-module",
+            "media",
+            "music"
+        ]
+    }
+}
