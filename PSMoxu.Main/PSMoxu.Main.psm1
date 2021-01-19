@@ -25,9 +25,7 @@ function Start-MoxuServer {
 
     Write-Verbose "Starting MoxuServer"
 
-    $ServerName = $Name
-
-    if ($PSCmdlet.ShouldProcess('Start MoxuServer', $ServerName)) {
+    if ($PSCmdlet.ShouldProcess('Start MoxuServer', $Name)) {
         #Start Server
     }
 
@@ -41,12 +39,18 @@ function Stop-MoxuServer {
         .DESCRIPTION
         Stop the Moxu server
 
+        .PARAMETER Name
+        The name of the server to start
+
         .EXAMPLE
-        Stop-MoxuServer
+        Stop-MoxuServer -Name "MoxuServer"
     #>
     [CmdletBinding(SupportsShouldProcess)]
     [OutputType([System.Void])]
     param (
+
+        [parameter(Mandatory = $true)]
+        [string]$Name
         # $ServerName
         # or
         # MoxuServer object from pipeline
@@ -54,9 +58,7 @@ function Stop-MoxuServer {
 
     Write-Verbose "Stopping MoxuServer"
 
-    $ServerName = "Moxu"
-
-    if ($PSCmdlet.ShouldProcess('Stop MoxuServer', $ServerName)) {
+    if ($PSCmdlet.ShouldProcess('Stop MoxuServer', $Name)) {
         #Stop Server
     }
 

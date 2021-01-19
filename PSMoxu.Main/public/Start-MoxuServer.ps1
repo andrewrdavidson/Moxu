@@ -25,9 +25,7 @@ function Start-MoxuServer {
 
     Write-Verbose "Starting MoxuServer"
 
-    $ServerName = $Name
-
-    if ($PSCmdlet.ShouldProcess('Start MoxuServer', $ServerName)) {
+    if ($PSCmdlet.ShouldProcess('Start MoxuServer', $Name)) {
         #Start Server
     }
 
