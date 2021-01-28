@@ -13,7 +13,7 @@
 param (
     [string]$BuildPropertiesFile = "Build.Properties.json",
     [string]$SourceFolder = "..\Source",
-    [string]$OutputFolder = "~\OneDrive\Documents\PowerShell\Modules\PSMoxu"
+    [string]$OutputFolder = "~\OneDrive\Documents\PowerShell\Modules\Moxu"
 )
 
 # Build the Moxu modules
@@ -61,7 +61,7 @@ catch {
 
 # Generate build location
 # $builtModuleLocation = (Split-Path -Path $PSScriptRoot -Parent)
-$builtModuleLocation = Join-Path -Path $OutputFolder -ChildPath $BuildProperties.ModuleData.ModuleVersion.("PSMoxu")
+$builtModuleLocation = Join-Path -Path $OutputFolder -ChildPath $BuildProperties.ModuleData.ModuleVersion.("Moxu")
 Write-Verbose "Build Location: $builtModuleLocation"
 
 # remove the module root location if it exists
@@ -76,8 +76,8 @@ if (Test-Path -Path $OutputFolder) {
 
 }
 
-New-Item -Path $OutputFolder -ItemType 'Directory'
-New-Item -Path $builtModuleLocation -ItemType 'Directory'
+New-Item -Path $OutputFolder -ItemType 'Directory' -ErrorAction SilentlyContinue
+New-Item -Path $builtModuleLocation -ItemType 'Directory' -ErrorAction SilentlyContinue
 
 $PSQualityCheckSplat = @{}
 if (-not ([string]::IsNullOrEmpty($buildProperties.Support.PSQualityCheck.ScriptAnalyzerRulesPath))) {

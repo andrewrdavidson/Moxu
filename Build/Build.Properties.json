@@ -11,14 +11,14 @@
     },
     "Module": {
         "Root": {
-            "PSMoxu": ""
+            "Moxu": ""
         },
         "Location": {
-            "PSMoxu.Main": "PSMoxu.Main",
-            "PSMoxu.Database": "PSMoxu.Database",
-            "PSMoxu.Installation": "PSMoxu.Installation",
-            "PSMoxu.Logging": "PSMoxu.Logging",
-            "PSMoxu.Media": "PSMoxu.Media"
+            "Moxu.Main": "Moxu.Main",
+            "Moxu.Database": "Moxu.Database",
+            "Moxu.Installation": "Moxu.Installation",
+            "Moxu.Logging": "Moxu.Logging",
+            "Moxu.Media": "Moxu.Media"
         }
     },
     "ModuleData": {
@@ -26,60 +26,60 @@
         "Company": "Andrew Davidson",
         "Copyright": "(c) Andrew Davidson. All rights reserved.",
         "Description": {
-            "PSMoxu": "This is the root module for Moxu.",
-            "PSMoxu.Main": "This module contains the main controller routines for Moxu.",
-            "PSMoxu.Database": "This sub-module contains database specific functions.",
-            "PSMoxu.Installation": "This sub-module contains installation specific functions.",
-            "PSMoxu.Logging": "This sub-module contains logging specific functions.",
-            "PSMoxu.Media": "This sub-module contains media specific functions."
+            "Moxu": "This is the root module for Moxu.",
+            "Moxu.Main": "This module contains the main controller routines for Moxu.",
+            "Moxu.Database": "This sub-module contains database specific functions.",
+            "Moxu.Installation": "This sub-module contains installation specific functions.",
+            "Moxu.Logging": "This sub-module contains logging specific functions.",
+            "Moxu.Media": "This sub-module contains media specific functions."
         },
         "FileList": {
-            "PSMoxu": null,
-            "PSMoxu.Main": null,
-            "PSMoxu.Database": [
+            "Moxu": null,
+            "Moxu.Main": null,
+            "Moxu.Database": [
                 "bin\\litedb\\5.0.10\\LiteDB.dll",
                 "bin\\sqlite\\3.13.0\\sqlite3.dll"
             ],
-            "PSMoxu.Installation": null,
-            "PSMoxu.Logging": null,
-            "PSMoxu.Media": [
+            "Moxu.Installation": null,
+            "Moxu.Logging": null,
+            "Moxu.Media": [
                 "bin\\taglib\\2.2.0\\TagLibSharp.dll"
             ]
         },
         "GUID": {
-            "PSMoxu": "cc99aab3-e282-40b3-9a11-812177017649",
-            "PSMoxu.Main": "67c0b16f-fca5-4561-aba8-c2e61271b845",
-            "PSMoxu.Database": "0af85c37-55aa-4277-be86-ba34278284a9",
-            "PSMoxu.Installation": "e1e1e97a-a8c1-4074-8726-45bf81d231ba",
-            "PSMoxu.Logging": "b7bebfb9-6f17-47b8-bf25-b86898e10ac8",
-            "PSMoxu.Media": "f8364e59-67a7-4e43-9b6f-80c352815b7e"
+            "Moxu": "cc99aab3-e282-40b3-9a11-812177017649",
+            "Moxu.Main": "67c0b16f-fca5-4561-aba8-c2e61271b845",
+            "Moxu.Database": "0af85c37-55aa-4277-be86-ba34278284a9",
+            "Moxu.Installation": "e1e1e97a-a8c1-4074-8726-45bf81d231ba",
+            "Moxu.Logging": "b7bebfb9-6f17-47b8-bf25-b86898e10ac8",
+            "Moxu.Media": "f8364e59-67a7-4e43-9b6f-80c352815b7e"
         },
-        "HelpInfoURI": "https://github.com/andrewrdavidson/PSMoxu/wiki",
-        "LicenseUri": "https://github.com/andrewrdavidson/PSMoxu/blob/main/LICENSE",
+        "HelpInfoURI": "https://github.com/andrewrdavidson/Moxu/wiki",
+        "LicenseUri": "https://github.com/andrewrdavidson/Moxu/blob/main/LICENSE",
         "ModuleVersion": {
-            "PSMoxu": "0.0.1",
-            "PSMoxu.Main": "0.0.1",
-            "PSMoxu.Database": "0.0.1",
-            "PSMoxu.Installation": "0.0.1",
-            "PSMoxu.Logging": "0.0.1",
-            "PSMoxu.Media": "0.0.1"
+            "Moxu": "0.0.1",
+            "Moxu.Main": "0.0.1",
+            "Moxu.Database": "0.0.1",
+            "Moxu.Installation": "0.0.1",
+            "Moxu.Logging": "0.0.1",
+            "Moxu.Media": "0.0.1"
         },
         "NestedModules": {
-            "PSMoxu": [
-                "PSMoxu.Database\\PSMoxu.Database.psd1",
-                "PSMoxu.Installation\\PSMoxu.Installation.psd1",
-                "PSMoxu.Logging\\PSMoxu.Logging.psd1",
-                "PSMoxu.Main\\PSMoxu.Main.psd1",
-                "PSMoxu.Media\\PSMoxu.Media.psd1"
+            "Moxu": [
+                "Moxu.Database\\Moxu.Database.psd1",
+                "Moxu.Installation\\Moxu.Installation.psd1",
+                "Moxu.Logging\\Moxu.Logging.psd1",
+                "Moxu.Main\\Moxu.Main.psd1",
+                "Moxu.Media\\Moxu.Media.psd1"
             ],
-            "PSMoxu.Main": null,
-            "PSMoxu.Database": null,
-            "PSMoxu.Installation": null,
-            "PSMoxu.Logging": null,
-            "PSMoxu.Media": null
+            "Moxu.Main": null,
+            "Moxu.Database": null,
+            "Moxu.Installation": null,
+            "Moxu.Logging": null,
+            "Moxu.Media": null
         },
         "PowerShellVersion": "6.0",
-        "ProjectUri": "https://github.com/andrewrdavidson/PSMoxu",
+        "ProjectUri": "https://github.com/andrewrdavidson/Moxu",
         "Tags": [
             "powershell",
             "powershell-module",
