@@ -6,12 +6,12 @@
     },
     "Support": {
         "PSQualityCheck": {
-            "SonarQubeRulesPath": "C:\\Source\\ScriptAnalyzerRules\\Indented.CodingConventions"
+            "ScriptAnalyzerRulesPath": "C:\\Source\\ScriptAnalyzerRules\\Indented.CodingConventions"
         }
     },
     "Module": {
         "Root": {
-            "PSMoxu": ".."
+            "PSMoxu": ""
         },
         "Location": {
             "PSMoxu.Main": "PSMoxu.Main",

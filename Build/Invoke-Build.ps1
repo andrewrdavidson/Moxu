@@ -11,24 +11,35 @@
 [CmdletBinding()]
 [OutputType([System.Void])]
 param (
-    $BuildProperties = "Build.Properties.json"
+    [string]$BuildPropertiesFile = "Build.Properties.json",
+    [string]$SourceFolder = "..\Source",
+    [string]$OutputFolder = "~\OneDrive\Documents\PowerShell\Modules\PSMoxu"
 )
 
 # Build the Moxu modules
 Write-Verbose "Loading Build Properties"
 try {
-    $buildProperties = Get-Content -Path $BuildProperties | ConvertFrom-Json
+    [PSCustomObject]$buildProperties = Get-Content -Path $BuildPropertiesFile | ConvertFrom-Json
 }
 catch {
     throw "Error loading the Build Properties file"
 }
+
+if ($null -eq $BuildProperties) {
+    throw "Empty Build Properties file"
+}
+
+Write-Verbose "Build Properties: $($BuildProperties.PreRequisites)"
+Write-Verbose "Build Properties: $($BuildProperties.Support)"
+Write-Verbose "Build Properties: $($BuildProperties.Module)"
+Write-Verbose "Build Properties: $($BuildProperties.ModuleData)"
 
 # Check that the build pre-requisites are available
 Write-Verbose "Verifying pre-requisites are available"
 
 try {
 
-    foreach ($preReq in $buildProperties.PreRequisites.PSObject.Properties) {
+    foreach ($preReq in $BuildProperties.PreRequisites.PSObject.Properties) {
 
         Import-Module -Name $preReq.Name -MinimumVersion $preReq.Value -Verbose:$false
 
@@ -49,36 +60,58 @@ catch {
 }
 
 # Generate build location
-$builtModuleLocation = (Split-Path -Path $PSScriptRoot -Parent)
+# $builtModuleLocation = (Split-Path -Path $PSScriptRoot -Parent)
+$builtModuleLocation = Join-Path -Path $OutputFolder -ChildPath $BuildProperties.ModuleData.ModuleVersion.("PSMoxu")
 Write-Verbose "Build Location: $builtModuleLocation"
 
+# remove the module root location if it exists
+if (Test-Path -Path $OutputFolder) {
+    Write-Verbose "Removing existing module file name"
+
+    (Get-ChildItem $OutputFolder -Recurse -Force) |
+        Sort-Object PSPath -Descending -Unique |
+        Remove-Item -Recurse -Force
+
+    Remove-Item -Path $OutputFolder -Force
+
+}
+
+New-Item -Path $OutputFolder -ItemType 'Directory'
+New-Item -Path $builtModuleLocation -ItemType 'Directory'
+
 $PSQualityCheckSplat = @{}
-if (-not ([string]::IsNullOrEmpty($buildProperties.Support.PSQualityCheck.SonarQubeRulesPath))) {
-    $PSQualityCheckSplat.Add("SonarQubeRulesPath", $buildProperties.Support.PSQualityCheck.SonarQubeRulesPath)
+if (-not ([string]::IsNullOrEmpty($buildProperties.Support.PSQualityCheck.ScriptAnalyzerRulesPath))) {
+    $PSQualityCheckSplat.Add("ScriptAnalyzerRulesPath", $BuildProperties.Support.PSQualityCheck.ScriptAnalyzerRulesPath )
+    Write-Verbose "Adding ScriptAnalyzerRules: $($buildProperties.Support.PSQualityCheck.ScriptAnalyzerRulesPath)"
 }
 
 # Loop through the modules
-foreach ($module in $buildProperties.Module.Location.PSObject.Properties) {
+foreach ($module in $BuildProperties.Module.Location.PSObject.Properties) {
 
     Write-Verbose "Building module : $($module.Name)"
 
+    $moduleSourceFolder = Join-Path -Path $SourceFolder -ChildPath $module.Name
+
     Write-Verbose "Getting Public modules"
-    $functionPublicPath = Join-Path -Path (Join-Path -Path $builtModuleLocation -ChildPath $module.Name) -ChildPath "public"
+    $functionPublicPath = Join-Path -Path $moduleSourceFolder -ChildPath "public"
     $sourcePublicFiles = Get-ChildItem -Path $functionPublicPath -Recurse
 
     Write-Verbose "Getting Private modules"
-    $functionPrivatePath = Join-Path -Path (Join-Path -Path $builtModuleLocation -ChildPath $module.Name) -ChildPath "private"
+    $functionPrivatePath = Join-Path -Path $moduleSourceFolder -ChildPath "private"
     $sourcePrivateFiles = Get-ChildItem -Path $functionPrivatePath -Recurse
 
     Write-Verbose "Generating module file name"
     $moduleName = "{0}{1}" -f $module.Name, '.psm1'
-    $moduleFileName = Join-Path -Path (Join-Path -Path $builtModuleLocation -ChildPath $module.Name) -ChildPath $moduleName
+    $moduleFolder = Join-Path -Path $builtModuleLocation -ChildPath $module.Name
+    $moduleFileName = Join-Path -Path $moduleFolder -ChildPath $moduleName
 
-    # # remove the module if it exists
-    if (Test-Path -Path $moduleFileName) {
+    # remove the module if it exists
+    if (Test-Path -Path $moduleFolder) {
         Write-Verbose "Removing existing module file name"
-        Remove-Item -Path $moduleFileName -Force
+        Remove-Item -Path $moduleFolder -Recurse -Force
     }
+
+    New-Item -Path $moduleFolder -ItemType 'Directory'
 
     Write-Verbose "Generating manifest file name"
     $manifestName = "{0}{1}" -f $module.Name, '.psd1'
@@ -154,30 +187,35 @@ foreach ($module in $buildProperties.Module.Location.PSObject.Properties) {
         continue
     }
 
+    $binFolder = Join-Path -Path $moduleSourceFolder -ChildPath "bin"
+    if (Test-Path -Path $binFolder) {
+        Copy-Item -Path (Join-Path -Path $moduleSourceFolder -ChildPath "bin") -Destination $moduleFolder -Recurse
+    }
+
     $newModuleManifest = @{
         Path = $manifestFileName
-        Guid = $buildProperties.ModuleData.Guid.($module.Name)
+        Guid = $BuildProperties.ModuleData.Guid.($module.Name)
         RootModule = ("{0}{1}" -f $module.Name, '.psm1')
 
-        ModuleVersion = $buildProperties.ModuleData.ModuleVersion.($module.Name)
-        PowerShellVersion = $buildProperties.ModuleData.PowerShellVersion
+        ModuleVersion = $BuildProperties.ModuleData.ModuleVersion.($module.Name)
+        PowerShellVersion = $BuildProperties.ModuleData.PowerShellVersion
 
         FunctionsToExport = $functionsToExport
         CmdletsToExport = @()
         VariablesToExport = @()
         AliasesToExport = @()
 
-        Author = $buildProperties.ModuleData.Author
-        Company = $buildProperties.ModuleData.Company
-        Copyright = $buildProperties.ModuleData.Copyright
-        Description = $buildProperties.ModuleData.Description.($module.Name)
-        FileList = $buildProperties.ModuleData.FileList.($module.Name)
-        HelpInfoURI = $buildProperties.ModuleData.HelpInfoURI
-        LicenseUri = $buildProperties.ModuleData.LicenseUri
-        ProjectUri = $buildProperties.ModuleData.ProjectUri
-        Tags = $buildProperties.ModuleData.Tags
+        Author = $BuildProperties.ModuleData.Author
+        Company = $BuildProperties.ModuleData.Company
+        Copyright = $BuildProperties.ModuleData.Copyright
+        Description = $BuildProperties.ModuleData.Description.($module.Name)
+        FileList = $BuildProperties.ModuleData.FileList.($module.Name)
+        HelpInfoURI = $BuildProperties.ModuleData.HelpInfoURI
+        LicenseUri = $BuildProperties.ModuleData.LicenseUri
+        ProjectUri = $BuildProperties.ModuleData.ProjectUri
+        Tags = $BuildProperties.ModuleData.Tags
 
-        NestedModules = $buildProperties.ModuleData.NestedModules.($module.Name)
+        NestedModules = $BuildProperties.ModuleData.NestedModules.($module.Name)
 
     }
 
@@ -197,8 +235,8 @@ foreach ($module in $buildProperties.Module.Location.PSObject.Properties) {
 }
 
 Write-Verbose "Generating Root Manifest"
-$rootModule = "{0}{1}" -f $buildProperties.Module.Root.PSObject.Properties.Name, '.psd1'
-$rootModuleName = Join-Path -Path $buildProperties.Module.Root.PSObject.Properties.Value -ChildPath $rootModule
+$rootModule = "{0}{1}" -f $BuildProperties.Module.Root.PSObject.Properties.Name, '.psd1'
+$rootModuleName = Join-Path -Path $builtModuleLocation -ChildPath $rootModule
 
 # remove the module if it exists
 if (Test-Path -Path $rootModuleName) {
@@ -207,28 +245,28 @@ if (Test-Path -Path $rootModuleName) {
 
 $newModuleManifest = @{
     Path = $rootModuleName
-    Guid = $buildProperties.ModuleData.Guid.($buildProperties.Module.Root.PSObject.Properties.Name)
-    # RootModule = ("{0}{1}" -f $buildProperties.Module.Root.PSObject.Properties.Name, '.psm1')
+    Guid = $BuildProperties.ModuleData.Guid.($buildProperties.Module.Root.PSObject.Properties.Name)
+    # RootModule = ("{0}{1}" -f $BuildProperties.Module.Root.PSObject.Properties.Name, '.psm1')
 
-    ModuleVersion = $buildProperties.ModuleData.ModuleVersion.($buildProperties.Module.Root.PSObject.Properties.Name)
-    PowerShellVersion = $buildProperties.ModuleData.PowerShellVersion
+    ModuleVersion = $BuildProperties.ModuleData.ModuleVersion.($buildProperties.Module.Root.PSObject.Properties.Name)
+    PowerShellVersion = $BuildProperties.ModuleData.PowerShellVersion
 
     FunctionsToExport = $functionsToExport
     CmdletsToExport = @()
     VariablesToExport = @()
     AliasesToExport = @()
 
-    Author = $buildProperties.ModuleData.Author
-    Company = $buildProperties.ModuleData.Company
-    Copyright = $buildProperties.ModuleData.Copyright
-    Description = $buildProperties.ModuleData.Description.($buildProperties.Module.Root.PSObject.Properties.Name)
-    FileList = $buildProperties.ModuleData.FileList.($buildProperties.Module.Root.PSObject.Properties.Name)
-    HelpInfoURI = $buildProperties.ModuleData.HelpInfoURI
-    LicenseUri = $buildProperties.ModuleData.LicenseUri
-    ProjectUri = $buildProperties.ModuleData.ProjectUri
-    Tags = $buildProperties.ModuleData.Tags
+    Author = $BuildProperties.ModuleData.Author
+    Company = $BuildProperties.ModuleData.Company
+    Copyright = $BuildProperties.ModuleData.Copyright
+    Description = $BuildProperties.ModuleData.Description.($buildProperties.Module.Root.PSObject.Properties.Name)
+    FileList = $BuildProperties.ModuleData.FileList.($buildProperties.Module.Root.PSObject.Properties.Name)
+    HelpInfoURI = $BuildProperties.ModuleData.HelpInfoURI
+    LicenseUri = $BuildProperties.ModuleData.LicenseUri
+    ProjectUri = $BuildProperties.ModuleData.ProjectUri
+    Tags = $BuildProperties.ModuleData.Tags
 
-    NestedModules = $buildProperties.ModuleData.NestedModules.($buildProperties.Module.Root.PSObject.Properties.Name)
+    NestedModules = $BuildProperties.ModuleData.NestedModules.($buildProperties.Module.Root.PSObject.Properties.Name)
 
 }
 
