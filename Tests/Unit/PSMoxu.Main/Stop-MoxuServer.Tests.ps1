@@ -1,11 +1,11 @@
 Describe "Stop-MoxuServer.Tests" {
 
-    Context "Parameter Tests" -Foreach @(
+    Context "Parameter Tests" -ForEach @(
         @{ 'Name' = 'Name'; 'Type' = 'String'; 'MandatoryFlag' = $true }
     ) {
 
         BeforeAll {
-            $functionPath = Resolve-Path -Path "$PSScriptRoot\..\..\..\PSMoxu.Main\public\Stop-MoxuServer.ps1"
+            $functionPath = Resolve-Path -Path "$PSScriptRoot\..\..\..\Source\PSMoxu.Main\public\Stop-MoxuServer.ps1"
             . $functionPath
             $commandletUnderTest = "Stop-MoxuServer"
         }
